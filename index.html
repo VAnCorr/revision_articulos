@@ -198,10 +198,10 @@
              // --- Función para ENVIAR DATOS a Google Sheet ---
              async function sendDataToSheet() {
                // ******** IMPORTANTE: Pega aquí la URL de tu *TERCER* Web App Script (para Artículos) ********
-               const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxdLnwIsX6YrfOFiuRB_aJkswJyknHCMQmqzGH4w2qor6dPE-4k8sNp2XXWtrm29knj/exec";
+               const WEB_APP_URL = "AQUÍ_PEGA_LA_URL_DE_TU_TERCER_WEB_APP_PARA_ARTICULOS";
                // ******** Asegúrate que es la URL del script correcto para esta rúbrica ********
 
-               if (WEB_APP_URL === "https://script.google.com/macros/s/AKfycbxdLnwIsX6YrfOFiuRB_aJkswJyknHCMQmqzGH4w2qor6dPE-4k8sNp2XXWtrm29knj/exec" || !WEB_APP_URL || !WEB_APP_URL.startsWith("https://script.google.com/")) { console.error("Error: URL Web App (Artículos) no configurada."); alert("Error config: Falta URL script guardado (Artículos)."); throw new Error("URL de Web App (Artículos) no configurada."); }
+               if (WEB_APP_URL === "AQUÍ_PEGA_LA_URL_DE_TU_TERCER_WEB_APP_PARA_ARTICULOS" || !WEB_APP_URL || !WEB_APP_URL.startsWith("https://script.google.com/")) { console.error("Error: URL Web App (Artículos) no configurada."); alert("Error config: Falta URL script guardado (Artículos)."); throw new Error("URL de Web App (Artículos) no configurada."); }
 
                // Recolectar datos (NUEVOS NOMBRES DE CRITERIOS PARA ARTÍCULOS)
                const formData = {
