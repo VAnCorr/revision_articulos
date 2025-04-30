@@ -182,12 +182,11 @@
             const resetButton = document.getElementById('resetButton');
             const calculateButton = document.getElementById('calculateButton');
             const rubricSections = form.querySelectorAll('.rubric-section');
-            // Máximo directo AHORA ES 100
-            const directMaxScore = 100;
+            const directMaxScore = 100; // Máximo directo es 100
             const finalMaxScore = 100;
             const exportButtonOriginalHTML = exportPdfButton.innerHTML;
 
-            // --- Cálculos y Display (Sin cambios) ---
+            // --- Cálculos y Display (Sin cambios funcionales) ---
             function calculateRawScore() { let r=0;rubricSections.forEach(s=>{const b=s.querySelectorAll('input[type="radio"]:checked');b.forEach(d=>{const v=parseInt(d.value,10);if(!isNaN(v)){r+=v;}});});return r; }
             function calculateSectionScore(section) { let s=0;const b=section.querySelectorAll('input[type="radio"]:checked');b.forEach(r=>{const v=parseInt(r.value,10);if(!isNaN(v)){s+=v;}});return s;}
             function updateScoresDisplay() { let t=0;rubricSections.forEach(s=>{const ss=calculateSectionScore(s);const m=parseInt(s.dataset.maxScore,10);const d=s.querySelector('.score-display');if(d){d.textContent=`Puntos: ${ss} / ${m}`;}t+=ss;});totalScoreDisplay.textContent=`${t} / ${finalMaxScore}`;return {rawScore:t,finalScore:t};}
@@ -198,39 +197,39 @@
              // --- Función para ENVIAR DATOS a Google Sheet ---
              async function sendDataToSheet() {
                // ******** IMPORTANTE: Pega aquí la URL de tu *TERCER* Web App Script (para Artículos) ********
-               const WEB_APP_URL = "AQUÍ_PEGA_LA_URL_DE_TU_TERCER_WEB_APP_PARA_ARTICULOS";
-               // ******** Asegúrate que es la URL del script correcto para esta rúbrica ********
+               const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxwltbj_lo7sCua5ZUCFi39F9HNQ_OJcsyKFNEQuBzFB6x629F0GkgU30f4lGMBMqB7Xw/exec"; // <-- ¡URL INSERTADA!
+               // ******** VERIFICA QUE SEA CORRECTA ********
 
-               if (WEB_APP_URL === "AQUÍ_PEGA_LA_URL_DE_TU_TERCER_WEB_APP_PARA_ARTICULOS" || !WEB_APP_URL || !WEB_APP_URL.startsWith("https://script.google.com/")) { console.error("Error: URL Web App (Artículos) no configurada."); alert("Error config: Falta URL script guardado (Artículos)."); throw new Error("URL de Web App (Artículos) no configurada."); }
+               if (!WEB_APP_URL || !WEB_APP_URL.startsWith("https://script.google.com/")) { console.error("Error: URL Web App (Artículos) no configurada o inválida."); alert("Error config: URL script guardado (Artículos) inválida."); throw new Error("URL de Web App (Artículos) inválida."); }
 
-               // Recolectar datos (NUEVOS NOMBRES DE CRITERIOS PARA ARTÍCULOS)
+               // Recolectar datos (CON LOS NUEVOS NOMBRES DE RADIO BUTTONS DE ARTÍCULOS)
                const formData = {
                  evaluatorName: document.getElementById('evaluatorName').value,
                  residentName: document.getElementById('residentName').value,
                  evaluationDate: document.getElementById('evaluationDate').value,
                  classTopic: document.getElementById('classTopic').value, // Artículo Presentado
-                 // Sección I: Comprensión (20 pts)
+                 // I. Comprensión
                  artCompObjMetRes: form.querySelector('input[name="artCompObjMetRes"]:checked')?.value,
                  artCompPregHip: form.querySelector('input[name="artCompPregHip"]:checked')?.value,
                  artCompTipoEst: form.querySelector('input[name="artCompTipoEst"]:checked')?.value,
                  artCompSintesis: form.querySelector('input[name="artCompSintesis"]:checked')?.value,
-                 // Sección II: Análisis Crítico (20 pts)
+                 // II. Análisis Crítico
                  artAnDiseno: form.querySelector('input[name="artAnDiseno"]:checked')?.value,
                  artAnEstadistica: form.querySelector('input[name="artAnEstadistica"]:checked')?.value,
                  artAnFortDeb: form.querySelector('input[name="artAnFortDeb"]:checked')?.value,
                  artAnSesgos: form.querySelector('input[name="artAnSesgos"]:checked')?.value,
-                 // Sección III: Claridad Exposición (15 pts)
+                 // III. Claridad Exposición
                  artExpSecuencia: form.querySelector('input[name="artExpSecuencia"]:checked')?.value,
                  artExpTransiciones: form.querySelector('input[name="artExpTransiciones"]:checked')?.value,
                  artExpClaridadVerbal: form.querySelector('input[name="artExpClaridadVerbal"]:checked')?.value,
-                 // Sección IV: Recursos Visuales (10 pts)
+                 // IV. Recursos Visuales
                  artVisClaridadDiseno: form.querySelector('input[name="artVisClaridadDiseno"]:checked')?.value,
                  artVisUsoEficaz: form.querySelector('input[name="artVisUsoEficaz"]:checked')?.value,
-                 // Sección V: Aplicabilidad Clínica (15 pts)
+                 // V. Aplicabilidad Clínica
                  artIntCriticaRes: form.querySelector('input[name="artIntCriticaRes"]:checked')?.value,
                  artIntContexto: form.querySelector('input[name="artIntContexto"]:checked')?.value,
                  artIntAplicab: form.querySelector('input[name="artIntAplicab"]:checked')?.value,
-                 // Sección VI: Dominio y Preguntas (20 pts)
+                 // VI. Dominio y Preguntas
                  artDomFluidez: form.querySelector('input[name="artDomFluidez"]:checked')?.value,
                  artDomTerminologia: form.querySelector('input[name="artDomTerminologia"]:checked')?.value,
                  artDomRespuestas: form.querySelector('input[name="artDomRespuestas"]:checked')?.value,
@@ -256,7 +255,6 @@
                } catch (error) { console.error("Error fetch (Artículo):", error); alert(`Error conexión al guardar (Artículo).\nDetalles: ${error.message}`); throw error; }
              }
 
-
             // --- Event Listener para Botón Exportar PDF ---
             exportPdfButton.addEventListener('click', async () => {
                  if (!form.checkValidity()) { alert("Por favor, complete y valide la rúbrica."); form.classList.add('was-validated'); return; }
@@ -277,7 +275,7 @@
                      pdf.setFontSize(16); pdf.setFont("helvetica", "bold"); pdf.setTextColor(37, 99, 235); pdf.text("Reporte Evaluación - Presentación de Artículo", pdfWidth / 2, currentY, { align: 'center' }); currentY += 12; pdf.setFont("helvetica", "normal"); pdf.setTextColor(51); // Título PDF actualizado
                      const infoImg = await captureElement('infoGeneralCard'); if(infoImg) addImageToPdf(infoImg, document.getElementById('infoGeneralCard')); else throw new Error("Fallo Info");
                      pdf.setFontSize(13); pdf.setFont("helvetica", "bold"); pdf.setTextColor(37, 99, 235); if(currentY + 10 > pageHeightAvailable) { pdf.addPage(); pageNum++; currentY = margin; } pdf.text("Evaluación Detallada", margin, currentY); currentY += 8; pdf.setFont("helvetica", "normal"); pdf.setTextColor(51);
-                     // MODIFICADO: Iterar hasta 6 secciones (ahora son 6)
+                     // MODIFICADO: Iterar hasta 6 secciones
                      for (let i = 1; i <= 6; i++) { const secImg = await captureElement(`section${i}`); if(secImg) addImageToPdf(secImg, document.getElementById(`section${i}`)); else console.warn(`Fallo section${i}`); }
                      const scoreImg = await captureElement('totalScoreCardScreen'); if(scoreImg) addImageToPdf(scoreImg, document.getElementById('totalScoreCardScreen')); else throw new Error("Fallo Score");
                      const strengthsTxt = document.getElementById('strengths').value.trim(); const areasTxt = document.getElementById('areasForImprovement').value.trim();
